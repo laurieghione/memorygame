@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Memory Game",
   "author": "Laurie Ghione",
-  "license": "ISC",
+  "license": "MIT",
   "scripts": {
     "nodemon": "./node_modules/.bin/nodemon"
   },

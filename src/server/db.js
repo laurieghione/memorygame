@@ -1,6 +1,6 @@
 const mysql = require("mysql");
 //get env variable
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "./.env" });
 
 // Create a connection to the database
 const connection = mysql.createConnection({
@@ -10,7 +10,9 @@ const connection = mysql.createConnection({
   database: process.env.DATABASE_NAME,
 });
 connection.connect((err) => {
-  if (err) throw err;
+  if (err) {
+    throw err;
+  }
   console.log("Connected!");
 });
 

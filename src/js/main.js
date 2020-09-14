@@ -2,7 +2,7 @@ var $ = require("jquery");
 var apiURL = "http://localhost:3000";
 
 //duration in seconds
-let duration = 30;
+let duration = 45;
 
 var timeleft = duration;
 

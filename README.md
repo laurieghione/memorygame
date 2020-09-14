@@ -1,35 +1,51 @@
-# Memory Game
+# Memory game
 
-duration : 30 sec
+The goal is match all pairs of fruits cards before time left.
+If you win, your time is save in database.
+If your time is one of the top three, it will be displayed !
 
-BUILD TOOL : gulp
-BDD : MYSQL
+The game duration is : 45 sec
 
-Open command line
+## Getting Started
 
-## Install project
+These instructions will get you a copy of the project up and running on your local machine for development.
 
-1. Install package
+Build tool : gulp
+The database : MYSQL
+CSS preprocessor : Sass
 
-### `npm install`
+### Prerequisites
 
-2. Install and configure MYSQL in your machine
+Install and configure MYSQL in your machine
 
+```
 https://dev.mysql.com/doc/refman/8.0/en/windows-installation.html
+```
 
-3. Create database and table
+Install Gulp cli in global context
 
+```
+npm install --global gulp-cli
+```
+
+Create database and table
+
+```
 CREATE DATABASE memorygame CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE memorygame;
+```
 
+```
 CREATE TABLE games (
 id int(11) NOT NULL AUTO_INCREMENT,
 duration int(11),
 PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+```
 
-4. Create file .env to add config values :
+Create file .env to add config values with add your credentials
 
+```
 URL=http://localhost
 API_PORT=3000
 DATABASE_NAME=memorygame
@@ -37,35 +53,84 @@ DATABASE_TABLE=games
 DATABASE_PASSWORD=xxxx
 DATABASE_USER=xxxxx
 DATABASE_HOST=localhost
+```
 
-5. Install gulp cli in global context
+### Installing
 
-### `npm install --global gulp-cli`
+Follow this steps to run development env :
 
-6. Launch gulp to run web server and build project
+1. Install package
 
-### `gulp`
+```
+npm install
+```
 
-7. In paralele launch API server
+2. Launch gulp to run local web server and build project
 
-### `node public/server/index.js`
+```
+gulp
+```
 
-Option : to build project for production
+3. In paralele launch API server
 
-### `gulp build`
+```
+node public/server/index.js
+```
 
-## API DOC
+## Build
 
-To test API calls use Postman
+To build project for production
+
+```
+gulp build
+```
+
+## API documentation
+
+To test API calls you can use Postman
 
 URL : http://localhost:3000/
 
-TO insert DATA :
+### To insert DATA
 
-## POST /game
+Request:
 
-body : { "duration" : 15}
+```http
+POST /game
+payload : { "duration" : xx}
+```
 
-TO GET 3 TOP min durations :
+### To get 3 smallest duration
 
-## GET /game/min
+Request:
+
+```http
+GET /game/min
+```
+
+Successful Response:
+
+```
+{[
+    5,
+    9,
+    10
+]}
+```
+
+### Status Codes
+
+memorygame returns the following status codes in its API:
+
+| Status Code | Description             |
+| :---------- | :---------------------- |
+| 200         | `OK`                    |
+| 500         | `INTERNAL SERVER ERROR` |
+
+## Authors
+
+- **Laurie Ghione** - _Initial work_
+
+## License
+
+This project is licensed under the MIT License.

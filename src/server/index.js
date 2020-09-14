@@ -4,7 +4,7 @@ const cors = require("cors");
 const db = require("./db.js");
 const app = express();
 //get env variable
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "./.env" });
 
 const apiPort = process.env.API_PORT;
 const table = process.env.DATABASE_TABLE;
