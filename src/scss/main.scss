@@ -1,0 +1,198 @@
+/// variables
+$background: #fcf4a3;
+$background-header: white;
+$duration-rotate: 0.7s;
+$font-color: #505050;
+$green: #43b02a;
+$size-cube: 6rem;
+$font-family: Helvetica, Arial, sans-serif;
+
+body {
+  background-color: $background;
+  margin: 0;
+  font-family: $font-family;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    margin: 0.3rem;
+  }
+
+  h2 {
+    font-size: 1rem !important;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+
+  .header {
+    background-color: $background-header;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px 0 rgba(119, 153, 166, 0.5);
+
+    .header-title {
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: $font-color;
+    }
+  }
+
+  button {
+    color: #fff;
+    background-color: #1976d2;
+    box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+      0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+    padding: 6px 16px;
+    font-size: 1rem;
+    border: 0;
+    text-transform: uppercase;
+    border-radius: 4px;
+    font-weight: 500;
+    line-height: 1.75;
+    outline: 0;
+    cursor: pointer;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+      border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+
+    &:hover {
+      background-color: rgb(17, 82, 147);
+    }
+
+    &:active {
+      box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+        0px 8px 10px 1px rgba(0, 0, 0, 0.14),
+        0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    }
+
+    &:disabled {
+      color: rgba(0, 0, 0, 0.56);
+      box-shadow: none;
+      background-color: #e0e0e0;
+      cursor: default;
+      pointer-events: none;
+    }
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 86vh;
+    .grid {
+      display: flex;
+      margin: 0.5rem;
+      position: relative;
+
+      .results {
+        width: 17rem;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        position: absolute;
+        border-radius: 15px;
+        background-color: tomato;
+        z-index: 1;
+        display: none;
+        line-height: 1.75;
+        color: $font-color;
+
+        #results-title,
+        p,
+        #win {
+          text-align: center;
+          font-weight: bold;
+        }
+
+        ul {
+          list-style-type: decimal;
+        }
+      }
+
+      table {
+        border-spacing: 0.3rem;
+        tr {
+          td {
+            border-radius: 50px;
+            cursor: pointer;
+            width: $size-cube;
+            height: $size-cube;
+            background-color: #b0b0b0;
+            box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2),
+              0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+              0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+          }
+        }
+
+        /**Sprites**/
+        $x: 0;
+        $y: 0;
+        $grid: 100px;
+
+        $fruits: apple, banana, orange, lime, pomegranate, apricot, lemon,
+          strawberry, green-apple, peach, grape, watermelon, plum, pear, cherry,
+          raspberry, mango, yellow-cherry;
+
+        //foreach element of the grid
+        @each $fruit in $fruits {
+          td[data-card~="#{$fruit}"] {
+            &.show {
+              //add background image
+              background: url("../assets/cards.png") no-repeat;
+              //move the position of the background
+              background-position: $x (-$y);
+              //animate rotate
+              transform: rotateY(360deg);
+              transition: transform $duration-rotate;
+              &:hover {
+                opacity: 1;
+              }
+            }
+            //animate rotate
+            transform: rotateY(180deg);
+            transform-style: preserve-3d;
+            transition: transform $duration-rotate;
+            &:hover {
+              opacity: 0.6;
+            }
+          }
+          //implement y value
+          $y: $y + $grid;
+        }
+      }
+    }
+
+    .control {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+
+      #start-button {
+        display: flex;
+        align-self: center;
+        z-index: 2;
+      }
+
+      .progress {
+        margin-top: 10px;
+        justify-content: space-between;
+        width: 70%;
+        display: flex;
+        align-self: center;
+        height: 12px;
+        border-radius: 5px;
+        background-color: white;
+        position: relative;
+        #bar {
+          display: flex;
+          opacity: 0.7;
+          border-radius: 5px 5px 5px 5px;
+          background-color: $green;
+          // transition: width 1s ease;
+        }
+      }
+    }
+  }
+}
