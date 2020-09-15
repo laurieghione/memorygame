@@ -71,7 +71,7 @@ npm install
 gulp
 ```
 
-3. In paralele launch API server
+3. In parallel launch API server
 
 ```
 node public/server/index.js
@@ -97,8 +97,11 @@ Request:
 
 ```http
 POST /game
+Content-Type : application/json
 payload : { "duration" : xx}
 ```
+
+xx is number
 
 ### To get 3 smallest duration
 
@@ -108,7 +111,7 @@ Request:
 GET /game/min
 ```
 
-Successful Response:
+Successful Json response:
 
 ```
 {[
