@@ -2,22 +2,22 @@ var $ = require("jquery");
 var apiURL = "http://localhost:3000";
 
 //duration in seconds
-let duration = 45;
-
+var duration = 45;
 var timeleft = duration;
 
+//boolean game is win
 var win = false;
 
 //grid size
-let columns = 7;
-let rows = 4;
+var columns = 7;
+var rows = 4;
 
 //randomize array
 function shuffle(array) {
   array.sort(() => Math.random() - 0.5);
 }
 
-let fruits = [
+var fruits = [
   "apple",
   "banana",
   "orange",
@@ -51,9 +51,9 @@ $("#start-button").click(() => {
 
 /**
  * To animate progress bar and display timer
- * @param {*} timeleft
- * @param {*} timetotal
- * @param {*} initalBarWidth
+ * @param {number} timeleft
+ * @param {number} timetotal
+ * @param {number} initalBarWidth
  */
 function launchTimer(timeleft, timetotal, initalBarWidth) {
   let progressBarWidth = (timeleft * initalBarWidth) / timetotal;
@@ -65,8 +65,9 @@ function launchTimer(timeleft, timetotal, initalBarWidth) {
 
   //write the number of seconds
   $("#start-button").html(timeleft + " sec");
+  //if the game is in progress
   if (timeleft >= 0) {
-    //if the game is in progress
+    //if not won
     if (!win) {
       setTimeout(() => {
         //decrement one second
@@ -76,13 +77,15 @@ function launchTimer(timeleft, timetotal, initalBarWidth) {
         launchTimer(timeleft, timetotal, initalBarWidth);
       }, 1000);
     } else {
+      // if the game is won
+      // insert duration in database
       //HTTP request
       //post duration with API url
       $.post(apiURL + "/game", {
         duration: duration - timeleft,
       })
-        .done(function (success) {
-          console.log(success);
+        .done(function (msg) {
+          console.log(msg);
         })
         .fail(function (error) {
           console.error("Error " + error.status + " " + error.statusText);
@@ -152,8 +155,8 @@ function returnCard() {
 
 /**
  * To build board game
- * @param {*} columns
- * @param {*} rows
+ * @param {number} columns
+ * @param {number} rows
  */
 function buildGrid(columns, rows) {
   let grid = "";
@@ -182,16 +185,16 @@ function launchGame() {
   boxes.removeClass();
 
   //shuffle fruits array
-  // shuffle(fruits);
+  shuffle(fruits);
   //shuffle grid array
-  //shuffle(boxes);
+  shuffle(boxes);
 
-  //add attribute for each box if not have already
+  //add attribute for each box if not exist
   if (!$(boxes.first()).attr("data-card")) {
     let duplicate = 0;
     let counter = 0;
     boxes.each(function (index, element) {
-      //add attribute with the first fruit in array
+      //add attribute with the fruit in array
       $(element).attr("data-card", fruits[counter]);
 
       //if fruit is display twice
@@ -221,24 +224,26 @@ function launchGame() {
 
 /**
  * Display best score
- * @param {*} afterGame
+ * @param {boolean} afterGame if is after game or not
  */
 function showBestScore(afterGame) {
   //launch HTTP get request to API
   $.get(apiURL + "/game/min")
     .done(function (datas) {
-      if (datas.length > 0) {
-        let content = " ";
+      let content = " ";
+      let show = false;
 
-        //if is after game show success or fail message
-        if (afterGame) {
-          if (win) {
-            $(".results #win").html("C'EST GAGNE !!! &#128513;");
-          } else {
-            $(".results #win").html("C'EST PERDU !!! &#128546;");
-          }
+      //if is after game show success or fail message
+      if (afterGame) {
+        if (win) {
+          $(".results #win").html("C'EST GAGNE !!! &#128513;");
+        } else {
+          $(".results #win").html("C'EST PERDU !!! &#128546;");
         }
+        show = true;
+      }
 
+      if (datas.length > 0) {
         //foreach datas
         $(datas).each(function (index, data) {
           content += "<li>" + data + " secondes </li>";
@@ -246,6 +251,11 @@ function showBestScore(afterGame) {
 
         // add content to results class
         $(".results ul").html(content);
+        $("#results-header").css("display", "block");
+        show = true;
+      }
+
+      if (show) {
         //show results
         $(".results").css("display", "block");
       }

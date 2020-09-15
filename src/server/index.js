@@ -16,15 +16,13 @@ app.use(bodyParser.json({ limit: "50mb" }));
 //POST data
 app.post("/game", (req, res) => {
   try {
-    //create json game object
-    const game = { duration: req.body.duration };
-    //insert in database
-    db.query("INSERT INTO " + table + " SET ?", game, (err, data) => {
+    //insert body in database
+    db.query("INSERT INTO " + table + " SET ?", req.body, (err, data) => {
       if (err) {
         throw err;
       }
 
-      //return code 200 OK
+      //return code 200 OK success
       return res.status(200).send("new game id :" + data.insertId);
     });
   } catch (error) {
@@ -39,7 +37,7 @@ app.post("/game", (req, res) => {
 //GET min datas
 app.get("/game/min", (req, res) => {
   try {
-    //select min value in database
+    //select min values in database
     db.query(
       "SELECT * FROM " + table + " ORDER BY duration ASC LIMIT 3",
       (err, rows) => {
@@ -51,7 +49,7 @@ app.get("/game/min", (req, res) => {
         rows.forEach((row) => {
           results.push(row.duration);
         });
-        //return code 200 OK
+        //return code 200 OK success
         return res.status(200).send(results);
       }
     );

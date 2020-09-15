@@ -1,5 +1,4 @@
 var gulp = require("gulp");
-var util = require("gulp-util");
 var browserSync = require("browser-sync");
 var sass = require("gulp-sass");
 var browserify = require("browserify");
@@ -12,6 +11,12 @@ var watchify = require("watchify");
 var config = {
   sourceDir: "src",
   destDir: "public",
+  jsDir: "/js",
+  sassDir: "/scss",
+  cssDir: "/css",
+  serverDir: "/server",
+  assetsDir: "/assets",
+  jsFile: "main.js",
 };
 
 //create web server at the /public folder
@@ -32,20 +37,22 @@ function reload(done) {
 //task sass transform scss in css
 gulp.task("sass", function () {
   return gulp
-    .src(config.sourceDir + "/scss/**/*.scss") // All files .scss
+    .src(config.sourceDir + config.sassDir + "/**/*.scss") // All files .scss
     .pipe(sass())
     .pipe(concat("main.css"))
-    .pipe(gulp.dest(config.destDir + "/css")); // transform .css in the folder public/css
+    .pipe(gulp.dest(config.destDir + config.cssDir)); // transform .css in the folder public/css
 });
 
 //task js
-var scripts = watchify(browserify("./" + config.sourceDir + "/js/main.js"));
+var scripts = watchify(
+  browserify("./" + config.sourceDir + config.jsDir + "/" + config.jsFile)
+);
 function bundle() {
   return scripts
     .bundle() // add dependencies
-    .pipe(source(config.sourceDir + "/js/main.js"))
-    .pipe(rename("main.js"))
-    .pipe(gulp.dest("./" + config.destDir + "/js")); // copy in the folder public/js
+    .pipe(source(config.sourceDir + config.jsDir + "/" + config.jsFile))
+    .pipe(rename(config.jsFile))
+    .pipe(gulp.dest("./" + config.destDir + config.jsDir)); // copy in the folder public/js
 }
 scripts.on("update", bundle);
 gulp.task("js", bundle);
@@ -53,7 +60,7 @@ gulp.task("js", bundle);
 //task copy html files
 gulp.task("html", function () {
   return gulp
-    .src("src/**/*.html") // All files .html
+    .src(config.sourceDir + "/**/*.html") // All files .html
     .pipe(gulp.dest(config.destDir)); // copy in the folder public
 });
 
@@ -62,13 +69,16 @@ gulp.task(
   "watch",
   gulp.series(function () {
     gulp.watch(
-      config.sourceDir + "/scss/**/*.scss",
+      config.sourceDir + config.sassDir + "/**/*.scss",
       gulp.series("sass", reload)
     );
-    gulp.watch(config.sourceDir + "/js/**/*.js", gulp.series("js", reload));
+    gulp.watch(
+      config.sourceDir + config.jsDir + "/**/*.js",
+      gulp.series("js", reload)
+    );
     gulp.watch(config.sourceDir + "/**/*.html", gulp.series("html", reload));
     gulp.watch(
-      config.sourceDir + "/server/**/*.js",
+      config.sourceDir + config.serverDir + "/**/*.js",
       gulp.series("api", reload)
     );
   })
@@ -76,15 +86,15 @@ gulp.task(
 //task copy assets
 gulp.task("assets", function () {
   return gulp
-    .src(config.sourceDir + "/assets/**/*")
-    .pipe(gulp.dest(config.destDir + "/assets"));
+    .src(config.sourceDir + config.assetsDir + "/**/*")
+    .pipe(gulp.dest(config.destDir + config.assetsDir));
 });
 
 //task copy api files
 gulp.task("api", function () {
   return gulp
-    .src(config.sourceDir + "/server/**/*")
-    .pipe(gulp.dest(config.destDir + "/server"));
+    .src(config.sourceDir + config.serverDir + "/**/*")
+    .pipe(gulp.dest(config.destDir + config.serverDir));
 });
 
 //clean files
@@ -101,8 +111,10 @@ gulp.task(
     gulp.parallel("sass", "js", "html", "api", "assets")
   )
 );
+
 // default to use only "gulp" without task
+// dev env
 gulp.task(
   "default",
-  gulp.parallel("sass", "js", "html", "api", "browserSync", "watch")
+  gulp.parallel("assets", "sass", "js", "html", "api", "browserSync", "watch")
 );
