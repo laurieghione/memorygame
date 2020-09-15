@@ -10,9 +10,9 @@ The game duration is : 45 sec
 
 These instructions will get you a copy of the project up and running on your local machine for development.
 
-Build tool : gulp
-The database : MYSQL
-CSS preprocessor : Sass
+- Build tool : gulp
+- The database : MYSQL
+- CSS preprocessor : Sass
 
 ### Prerequisites
 
